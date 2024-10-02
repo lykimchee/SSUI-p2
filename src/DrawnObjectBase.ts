@@ -23,7 +23,7 @@
 // PROPERTIES
 // Key properties include those that determine the current size and position of the 
 // object (x,y, w,h); size configuration information that determine the sizing 
-// capabilities of this object (minimum, natural, and maximum width and hieght: 
+// capabilities of this object (minimum, natural, and maximum width and height: 
 // wConfig, hConfig); and whether the object is currently visible (visible).  All 
 // properties use protected storage (declared in "_name" form), along with get and/or
 // set accessors (declared with a "plain" name), and in some cases additional accessors
@@ -55,7 +55,7 @@
 // visual image for the object, it must declare "damage" indicating what part of its 
 // display may need to be udpated (by calling damageArea()) or that it's full display 
 // might need to be updated (by calling damageAll()).  Note that it is safe to 
-// declare more damaged area that could actually change, so it is allways safe to
+// declare more damaged area that could actually change, so it is always safe to
 // call damageAll() (and most code defaults to doing that rather than working out 
 // the exact area of damage).
 //
@@ -108,11 +108,8 @@ export class DrawnObjectBase {
     public get x() : number {return this._x;}  
     public set x(v : number) {
         if (v !== this.x) {
-
-             // don't forget to declare damage whenever something changes
-             // that could affect the display
-
-            //=== YOUR CODE HERE ===
+            this._x = v;
+            this.damageAll();
         }
     }    
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -121,7 +118,10 @@ export class DrawnObjectBase {
     protected _y : number = 0;
     public get y() : number {return this._y;}
     public set y(v : number) {
-        //=== YOUR CODE HERE ===
+        if (v != this.y) {
+            this._y = v;
+            this.damageAll();
+        }
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -131,6 +131,7 @@ export class DrawnObjectBase {
     public set position(v : PointLiteral) {
         let {x:newX, y:newY} = v;
         this.x = newX; this.y = newY;
+        this.damageAll();
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -139,7 +140,9 @@ export class DrawnObjectBase {
     protected _w : number = 42;
     public get w() : number {return this._w;}
     public set w(v : number) {
-            //=== YOUR CODE HERE ===
+        this._w = v;
+        this.wConfig = SizeConfig.elastic(v);
+        this.damageAll();
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -148,7 +151,7 @@ export class DrawnObjectBase {
     protected _wConfig : SizeConfigLiteral = SizeConfig.elastic(42);
     public get wConfig() : SizeConfigLiteral {return this._wConfig;}
     public set wConfig(v : SizeConfigLiteral) {
-        //=== YOUR CODE HERE ===
+        this._wConfig = v;
     }
         
     public get naturalW() : number {return this._wConfig.nat;}
@@ -173,7 +176,9 @@ export class DrawnObjectBase {
     protected _h : number = 13;
     public get h() : number {return this._h;}
     public set h(v : number) {
-        //=== YOUR CODE HERE ===
+        this._h = v;
+        this.hConfig = SizeConfig.elastic(v);
+        this.damageAll();
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -182,7 +187,7 @@ export class DrawnObjectBase {
     protected _hConfig : SizeConfigLiteral = SizeConfig.elastic(13);
     public get hConfig() : SizeConfigLiteral {return this._hConfig;}
     public set hConfig(v : SizeConfigLiteral) {
-        //=== YOUR CODE HERE ===
+        this._hConfig = v;
     }
 
     public get naturalH() : number {return this._hConfig.nat;}
@@ -215,7 +220,8 @@ export class DrawnObjectBase {
     protected _visible : boolean = true;
     public get visible() : boolean {return this._visible;}
     public set visible(v : boolean) {
-            //=== YOUR CODE HERE ===
+        this._visible = v;
+        this.damageAll();
     }
 
     //-------------------------------------------------------------------
@@ -440,7 +446,9 @@ export class DrawnObjectBase {
     public applyClip(ctx : DrawContext, 
                      clipx : number, clipy : number, clipw : number, cliph : number) 
     {
-        //=== YOUR CODE HERE ===
+        ctx.beginPath();
+        ctx.rect(clipx, clipy, clipw, cliph);
+        ctx.clip();
     }
 
     // Utility routine to create a new rectangular path at our bounding box.
@@ -505,7 +513,10 @@ export class DrawnObjectBase {
         // save the state of the context object on its internal stack
         ctx.save();
 
-        //=== YOUR CODE HERE ===
+        let child = this.children[childIndx];
+        ctx.translate(this.x, this.y);
+        this.makeBoundingBoxPath(ctx);
+        ctx.clip();
     }
 
     
@@ -632,7 +643,7 @@ export class DrawnObjectBase {
     // declaring extra damage. This method passes a damage report up the tree via 
     // our parent.
     public damageArea(xv: number, yv : number, wv : number, hv : number) : void {
-        //=== YOUR CODE HERE ===
+        this.parent?._damageFromChild(this, xv, yv, wv, hv);
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -656,7 +667,7 @@ export class DrawnObjectBase {
                                xInChildCoords: number, yInChildCoords: number, 
                                wv : number, hv: number) : void 
     {
-            //=== YOUR CODE HERE ===
+        this.parent?.damageArea(xInChildCoords + this.x, yInChildCoords + this.y, wv, hv);
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .

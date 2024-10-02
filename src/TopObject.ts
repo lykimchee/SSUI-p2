@@ -97,7 +97,7 @@ export class TopObject extends DrawnObjectBase {
 
     // For this object we clear the canvas behind the children that we draw
     protected override _drawSelfOnly(ctx: CanvasRenderingContext2D): void {
-        //=== YOUR CODE HERE ===
+        ctx.clearRect(0, 0, this.w, this.h);
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -117,6 +117,7 @@ export class TopObject extends DrawnObjectBase {
     // areas through the normal means, prior to calling this method.
     public layoutAndDrawAll() : void {
         // only do something if we have been damaged since the last redraw
+        this._damaged = true;
         if (this.damaged) {
 
             // save the async damage setting so we can restore it
@@ -155,12 +156,11 @@ export class TopObject extends DrawnObjectBase {
                 // ourselves...
 
                 // clip to our bounds
-                
-                //=== YOUR CODE HERE ===
+                this.applyClip(this.canvasContext, 0, 0, this.w, this.h);
 
                 // within our bounds clip to just the damaged region
-                
-                //=== YOUR CODE HERE ===
+                this.applyClip(this.canvasContext, this._damageRectX, this._damageRectY,
+                                                   this._damageRectW, this._damageRectH);
 
                 // after this we will no longer be damaged, so reset our damage tracking
                 // rectangle to be our whole bounds
@@ -169,8 +169,7 @@ export class TopObject extends DrawnObjectBase {
                 this._damageRectH = this.h;
 
                 // do the actual drawing from here down the tree
-                
-                //=== YOUR CODE HERE ===
+                this.draw(this.canvasContext); // draws self and children
 
             } catch(err) {
                 // catch any exception thrown and echo the message, but then 
@@ -202,7 +201,10 @@ export class TopObject extends DrawnObjectBase {
     // Override the routine that declares damage for this object to record the 
     // damage instead of passing it up the tree (since there is no up  from here).
     public override damageArea(xv: number, yv: number, wv: number, hv: number): void {
-        //=== YOUR CODE HERE ===
+        this._damageRectX = xv;
+        this._damageRectY = yv;
+        this._damageRectW = wv;
+        this._damageRectH = hv;
     }
     
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  
