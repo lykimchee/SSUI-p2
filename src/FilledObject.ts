@@ -27,12 +27,12 @@ export class FilledObject extends DrawnObjectBase {
     // Override w & h setters so they enforce fixed size
     public override get w() {return super.w;}  
     public override set w(v : number) {
-        //=== YOUR CODE HERE ===
+        this._wConfig = SizeConfig.fixed(v);
     }
 
     public override get h() {return super.h;}
     public override set h(v : number) {
-        //=== YOUR CODE HERE ===
+        this._hConfig = SizeConfig.fixed(v);
     }
 
 
@@ -71,8 +71,8 @@ export class FilledObject extends DrawnObjectBase {
         } else {
             ctx.fillStyle = this.color.toString();
         }
-        
-        //=== YOUR CODE HERE ===
+        // draw rectangle based on fillStyle
+        ctx.fillRect(this.x, this.y, this.w, this.h);
     }
 
     

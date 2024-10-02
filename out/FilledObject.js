@@ -23,11 +23,11 @@ export class FilledObject extends DrawnObjectBase {
     // Override w & h setters so they enforce fixed size
     get w() { return super.w; }
     set w(v) {
-        //=== YOUR CODE HERE ===
+        this._wConfig = SizeConfig.fixed(v);
     }
     get h() { return super.h; }
     set h(v) {
-        //=== YOUR CODE HERE ===
+        this._hConfig = SizeConfig.fixed(v);
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // Override configuration setters to enforce fixed size
@@ -51,7 +51,8 @@ export class FilledObject extends DrawnObjectBase {
         else {
             ctx.fillStyle = this.color.toString();
         }
-        //=== YOUR CODE HERE ===
+        // draw rectangle based on fillStyle
+        ctx.fillRect(this.x, this.y, this.w, this.h);
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // Produce a human readable "tag" string for this object -- a short string which 
