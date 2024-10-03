@@ -74,14 +74,22 @@ export class IconObject extends DrawnObjectBase {
     }
     get resizesImage() { return this._resizesImage; }
     set resizesImage(v) {
-        //=== YOUR CODE HERE ===
+        this._resizesImage = v;
+        if (!v) {
+            this._resize();
+        }
     }
     //-------------------------------------------------------------------
     // Methods
     //-------------------------------------------------------------------
     // If our size is determined by the image, resize us to match (otherwise do nothing).
     _resize() {
-        //=== YOUR CODE HERE ===
+        var _a, _b;
+        if ((!this._resizesImage) && this._image) {
+            // set to image width and height if defined, else keep original size
+            this._w = ((_a = this._image.canvasImage) === null || _a === void 0 ? void 0 : _a.width) || this.w;
+            this._h = ((_b = this._image.canvasImage) === null || _b === void 0 ? void 0 : _b.height) || this.h;
+        }
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // Function that is called when our loading is complete
@@ -101,14 +109,17 @@ export class IconObject extends DrawnObjectBase {
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // Method to draw this object.  
     _drawSelfOnly(ctx) {
+        var _a, _b, _c, _d;
         // if we don't have an image bail out
         if (!this.image || !this.image.canvasImage)
             return;
-        if (this.resizesImage) {
-            //=== YOUR CODE HERE ===
+        if (this.resizesImage) { // draw image at our size
+            ctx.drawImage(this.image.canvasImage, 0, 0, this.w, this.h);
         }
-        else {
-            //=== YOUR CODE HERE ===
+        else { // draw original image size
+            let w = ((_b = (_a = this._image) === null || _a === void 0 ? void 0 : _a.canvasImage) === null || _b === void 0 ? void 0 : _b.width) || this.w;
+            let h = ((_d = (_c = this._image) === null || _c === void 0 ? void 0 : _c.canvasImage) === null || _d === void 0 ? void 0 : _d.height) || this.h;
+            ctx.drawImage(this.image.canvasImage, 0, 0, w, h);
         }
     }
 } // end of IconObject class

@@ -52,7 +52,7 @@ export class FilledObject extends DrawnObjectBase {
             ctx.fillStyle = this.color.toString();
         }
         // draw rectangle based on fillStyle
-        ctx.fillRect(this.x, this.y, this.w, this.h);
+        ctx.fillRect(0, 0, this.w, this.h);
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // Produce a human readable "tag" string for this object -- a short string which 

@@ -451,8 +451,8 @@ export class DrawnObjectBase {
         // save the state of the context object on its internal stack
         ctx.save();
         let child = this.children[childIndx];
-        ctx.translate(this.x, this.y);
-        this.makeBoundingBoxPath(ctx);
+        ctx.translate(child.x, child.y);
+        child.makeBoundingBoxPath(ctx);
         ctx.clip();
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -473,7 +473,7 @@ export class DrawnObjectBase {
             // do the setup for drawing this child
             this._startChildDraw(ch, ctx);
             // do the actual drawing for this child
-            // 
+            //
             // we need to take care that we without fail always call _endChildDraw(), 
             // otherwiset he save/restore stack in the context object will get messed up 
             // and that would likely ruin all drawing from then on.  so we put the 

@@ -20,21 +20,23 @@ export class TextObject extends DrawnObjectBase {
         this._padding = padding;
         this._color = color;
         this._renderType = renderType;
+        console.log("init", this.text, this.w, this.h);
         this._recalcSize();
     }
     get text() { return this._text; }
     set text(v) {
-        //=== YOUR CODE HERE ===
+        this._text = v;
     }
     get font() { return this._font; }
     set font(v) {
-        //=== YOUR CODE HERE ===
+        this._font = v;
     }
     get padding() { return this._padding; }
     set padding(v) {
         if (typeof v === 'number')
             v = { w: v, h: v };
-        //=== YOUR CODE HERE ===
+        this._padding = v;
+        this._recalcSize();
     }
     get renderType() { return this._renderType; }
     set rederType(v) { this._renderType = v; }
@@ -45,7 +47,9 @@ export class TextObject extends DrawnObjectBase {
     //-------------------------------------------------------------------
     // Recalculate the size of this object based on the size of the text
     _recalcSize(ctx) {
-        //=== YOUR CODE HERE ===
+        const meas = this._measureText(this.text, this.font, ctx);
+        this.w = meas.w + (2 * this.padding.w);
+        this.h = meas.h + (2 * this.padding.h);
         // set the size configuration to be fixed at that size
         this.wConfig = SizeConfig.fixed(this.w);
         this.hConfig = SizeConfig.fixed(this.h);
@@ -68,7 +72,24 @@ export class TextObject extends DrawnObjectBase {
             else {
                 clr = this.color.toString();
             }
-            //=== YOUR CODE HERE ===
+            // set basic text settings
+            ctx.font = this.font;
+            ctx.textBaseline = 'alphabetic'; // alphabetic baseline text only
+            ctx.direction = 'ltr'; // handling left-to-right text only
+            ctx.textAlign = 'left';
+            // calculate positions
+            const textXStart = this.padding.w;
+            const textYBaseline = this._measureText(this.text, this.font, ctx).baseln;
+            const textYBottom = this.padding.h + textYBaseline;
+            // draw text
+            if (this.renderType === 'fill') {
+                ctx.fillStyle = clr;
+                ctx.fillText(this.text, textXStart, textYBottom);
+            }
+            else if (this.renderType === 'stroke') {
+                ctx.strokeStyle = clr;
+                ctx.strokeText(this.text, textXStart, textYBottom);
+            }
         }
         finally {
             // restore the drawing context to the state it was given to us in

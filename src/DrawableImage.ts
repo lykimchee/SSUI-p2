@@ -7,7 +7,6 @@
 export class DrawableImage {
     public constructor(url? : string, notifyFun? : (evt:Event, img:DrawableImage)=>void) {
         this._loaded = false;
-        // this._canvasImage = undefined;
         this._canvasImage = undefined;
         this._notifyList = [];
         if (notifyFun) this.addNotify(notifyFun);
@@ -23,7 +22,7 @@ export class DrawableImage {
     // Properties
     //-------------------------------------------------------------------
 
-    //xx MISSING_IMAGE is not working yet...
+    // MISSING_IMAGE is not working yet...
     // URI to provide a "missing/not-yet-loaded" image from in-program data
     // This is a 50x50 generic "this will be an image" icon in PNG format
     public static readonly missingImageURI : string = "";
@@ -76,7 +75,7 @@ export class DrawableImage {
         if (!this._loaded) this._notifyList.push(notifyFun);
     }
 
-     //-------------------------------------------------------------------
+    //-------------------------------------------------------------------
     // Methods
     //-------------------------------------------------------------------
 

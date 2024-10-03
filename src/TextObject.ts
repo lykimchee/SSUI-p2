@@ -24,6 +24,7 @@ export class TextObject extends DrawnObjectBase {
             this._color = color;
             this._renderType = renderType;
             
+            console.log("init", this.text, this.w, this.h);
             this._recalcSize();
     }
 
@@ -35,7 +36,7 @@ export class TextObject extends DrawnObjectBase {
     protected _text : string ;
     public get text() {return this._text;}
     public set text(v : string) {
-        //=== YOUR CODE HERE ===
+        this._text = v;
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -67,7 +68,7 @@ export class TextObject extends DrawnObjectBase {
     protected _font : string;
     public get font() {return this._font;}
     public set font(v : string) {
-        //=== YOUR CODE HERE ===
+        this._font = v;
     }  
     
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -79,7 +80,8 @@ export class TextObject extends DrawnObjectBase {
     public get padding() : SizeLiteral {return this._padding;}
     public set padding(v : SizeLiteral | number) {
         if (typeof v === 'number') v = {w:v, h:v};
-        //=== YOUR CODE HERE ===
+        this._padding = v;
+        this._recalcSize();
     }
     
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -106,7 +108,9 @@ export class TextObject extends DrawnObjectBase {
 
     // Recalculate the size of this object based on the size of the text
     protected _recalcSize(ctx? : DrawContext) : void {
-        //=== YOUR CODE HERE ===
+        const meas = this._measureText(this.text, this.font, ctx);
+        this.w = meas.w + (2*this.padding.w);
+        this.h = meas.h + (2*this.padding.h);
 
         // set the size configuration to be fixed at that size
         this.wConfig = SizeConfig.fixed(this.w);
@@ -133,7 +137,26 @@ export class TextObject extends DrawnObjectBase {
                 clr = this.color.toString();
             }
             
-            //=== YOUR CODE HERE ===
+            // set basic text settings
+            ctx.font = this.font;
+            ctx.textBaseline = 'alphabetic'; // alphabetic baseline text only
+            ctx.direction = 'ltr';           // handling left-to-right text only
+            ctx.textAlign = 'left';
+
+            // calculate positions
+            const textXStart = this.padding.w;
+            const textYBaseline = this._measureText(this.text, this.font, ctx).baseln;
+            const textYBottom = this.padding.h + textYBaseline;
+
+            // draw text
+            if (this.renderType === 'fill') {
+                ctx.fillStyle = clr;
+                ctx.fillText(this.text, textXStart, textYBottom);
+            }
+            else if (this.renderType === 'stroke') {
+                ctx.strokeStyle = clr;
+                ctx.strokeText(this.text, textXStart, textYBottom);
+            }
 
         }   finally {
             // restore the drawing context to the state it was given to us in

@@ -86,7 +86,10 @@ export class IconObject extends DrawnObjectBase {
     protected _resizesImage : boolean = true;
     public get resizesImage() {return this._resizesImage;}
     public set resizesImage(v : boolean) {
-        //=== YOUR CODE HERE ===
+        this._resizesImage = v;
+        if (!v) {
+            this._resize();
+        }
     }
 
     //-------------------------------------------------------------------
@@ -95,7 +98,11 @@ export class IconObject extends DrawnObjectBase {
     
     // If our size is determined by the image, resize us to match (otherwise do nothing).
     protected _resize() {
-        //=== YOUR CODE HERE ===
+        if ((!this._resizesImage) && this._image) {
+            // set to image width and height if defined, else keep original size
+            this._w = this._image.canvasImage?.width || this.w;
+            this._h = this._image.canvasImage?.height || this.h;
+        }
     }
 
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -123,10 +130,12 @@ export class IconObject extends DrawnObjectBase {
         // if we don't have an image bail out
         if (!this.image || !this.image.canvasImage) return;
 
-        if (this.resizesImage) {
-            //=== YOUR CODE HERE ===
-        } else {
-            //=== YOUR CODE HERE ===
+        if (this.resizesImage) { // draw image at our size
+            ctx.drawImage(this.image.canvasImage, 0, 0, this.w, this.h);
+        } else { // draw original image size
+            let w = this._image?.canvasImage?.width || this.w;
+            let h = this._image?.canvasImage?.height || this.h;
+            ctx.drawImage(this.image.canvasImage, 0, 0, w, h);
         }
     }
 

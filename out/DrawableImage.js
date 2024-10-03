@@ -15,7 +15,6 @@ export class DrawableImage {
         // List of the notification functions we are to call once this image is loaded.
         this._notifyList = [];
         this._loaded = false;
-        // this._canvasImage = undefined;
         this._canvasImage = undefined;
         this._notifyList = [];
         if (notifyFun)
@@ -88,7 +87,7 @@ _a = DrawableImage;
 //-------------------------------------------------------------------
 // Properties
 //-------------------------------------------------------------------
-//xx MISSING_IMAGE is not working yet...
+// MISSING_IMAGE is not working yet...
 // URI to provide a "missing/not-yet-loaded" image from in-program data
 // This is a 50x50 generic "this will be an image" icon in PNG format
 DrawableImage.missingImageURI = "";
