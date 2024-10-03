@@ -22,11 +22,11 @@ export class Spring extends DrawnObjectBase {
     // Override w & h setters so they enforce elastic size
     get w() { return super.w; }
     set w(v) {
-        //=== YOUR CODE HERE ===
+        this._wConfig = SizeConfig.elastic(v);
     }
     get h() { return super.h; }
     set h(v) {
-        //=== YOUR CODE HERE ===
+        this._hConfig = SizeConfig.elastic(v);
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // Override configuration setters to enforce elastic with zero natural size

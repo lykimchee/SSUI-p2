@@ -85,8 +85,7 @@ export class TopObject extends DrawnObjectBase {
     // areas through the normal means, prior to calling this method.
     layoutAndDrawAll() {
         // only do something if we have been damaged since the last redraw
-        this._damaged = true;
-        if (this.damaged) {
+        if (true) {
             // save the async damage setting so we can restore it
             const saveAsyncSetting = this.allowAsyncDamageRedraw;
             // do the layout first...
@@ -155,6 +154,7 @@ export class TopObject extends DrawnObjectBase {
     // Override the routine that declares damage for this object to record the 
     // damage instead of passing it up the tree (since there is no up  from here).
     damageArea(xv, yv, wv, hv) {
+        this._damaged = true;
         this._damageRectX = xv;
         this._damageRectY = yv;
         this._damageRectW = wv;

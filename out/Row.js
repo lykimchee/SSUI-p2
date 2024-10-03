@@ -77,7 +77,29 @@ export class Row extends Group {
     //
     // Our width is set to the width determined by stacking our children horizontally.
     _doLocalSizing() {
-        //=== YOUR CODE HERE ===max};
+        // set our width configuration to be the sum of the children
+        // (min is sum of mins, natual is sum of naturals, and max is sum of maxes)
+        let wMin = 0;
+        let wNat = 0;
+        let wMax = 0;
+        for (let child of this.children) {
+            wMin += child.wConfig.min;
+            wNat += child.wConfig.nat;
+            wMax += child.wConfig.max;
+        }
+        this._wConfig = { min: wMin, nat: wNat, max: wMax };
+        // set our height configuration based on the (piecewise) maximum of our children
+        // (min is the max of the child mins, natural is the max of the child naturals, and 
+        // max is the max of the child maxes)
+        let hMin = 0;
+        let hNat = 0;
+        let hMax = 0;
+        for (let child of this.children) {
+            hMin = Math.max(hMin, child.hConfig.min);
+            hNat = Math.max(hNat, child.hConfig.nat);
+            hMax = Math.max(hMax, child.hConfig.max);
+        }
+        this._hConfig = { min: hMin, nat: hNat, max: hMax };
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // This method adjusts the width of the children to do horizontal springs and struts 
@@ -134,7 +156,15 @@ export class Row extends Group {
         let natSum = 0;
         let availCompr = 0;
         let numSprings = 0;
-        //=== YOUR CODE HERE ===
+        for (let child of this.children) {
+            if (child instanceof Spring) {
+                numSprings++;
+            }
+            else {
+                natSum += child.wConfig.nat;
+                availCompr += child.wConfig.nat - child.wConfig.min;
+            }
+        }
         return [natSum, availCompr, numSprings];
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -143,7 +173,17 @@ export class Row extends Group {
     // are no child springs, this does nothing (which has the eventual effect of leaving 
     // the space at the right of the row as a fallback strategy).
     _expandChildSprings(excess, numSprings) {
-        //=== YOUR CODE HERE ===
+        // if we have no springs we are done
+        if (numSprings === 0)
+            return;
+        // each spring will get an equal share of the excess space
+        let springShare = excess / numSprings;
+        // expand each spring by the share of the excess space
+        for (let child of this.children) {
+            if (child instanceof Spring) {
+                child.w += springShare;
+            }
+        }
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
     // Contract our child objects to make up the given amount of shortfall.  Springs
@@ -159,7 +199,11 @@ export class Row extends Group {
         // each child, then subtract that fraction of the total shortfall 
         // from the natural height of that child, to get the assigned height.
         for (let child of this.children) {
-            //=== YOUR CODE HERE ===
+            if (child instanceof Spring)
+                continue; // springs don't compress
+            let fraction = (child.wConfig.nat - child.wConfig.min) / availCompr;
+            let childCompr = fraction * shortfall;
+            child.w = child.wConfig.nat - childCompr;
         }
     }
     //. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -197,7 +241,19 @@ export class Row extends Group {
             xpos += child.w;
         }
         // apply our justification setting for the vertical
-        //=== YOUR CODE HERE ===
+        for (let child of this.children) {
+            switch (this.hJustification) {
+                case 'top':
+                    child.y = 0;
+                    break;
+                case 'center':
+                    child.y = (this.h - child.h) / 2;
+                    break;
+                case 'bottom':
+                    child.y = this.h - child.h;
+                    break;
+            }
+        }
     }
 }
 //===================================================================

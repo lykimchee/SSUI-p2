@@ -483,7 +483,7 @@ export class DrawnObjectBase {
     // child objects.  This results in a default behavior of drawing the children on 
     // top of the all the drawing for this object.  If more complex drawing (including 
     // drawing between or over children) is desired, this method should be overridden.
-    public draw(ctx : DrawContext) : void { 
+    public draw(ctx : DrawContext) : void {
         if (this.visible) {
             this._drawSelfOnly(ctx);
             this._drawChildren(ctx);

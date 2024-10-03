@@ -24,7 +24,6 @@ export class TextObject extends DrawnObjectBase {
             this._color = color;
             this._renderType = renderType;
             
-            console.log("init", this.text, this.w, this.h);
             this._recalcSize();
     }
 

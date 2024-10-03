@@ -55,8 +55,8 @@ export function runTests() {
     testFilled(root);
     testIcon(root, 725, 10);
     testText(root, 200, 50);
-    // testCol(root, 375, 300);
-    // testRow(root, 10, 600);
+    testCol(root, 375, 300);
+    testRow(root, 10, 600);
     // testRowCol(root, 700, 350);
 
     // put in a text object to prompt for our interactive testing
